@@ -17,7 +17,9 @@ trait RS_AJAX
 
         check_ajax_referer('rs save countries');
 
+        // ******************
         // save restrictions
+        // ******************
         if (isset($_POST['countries'])) :
 
             $prod_ids  = $_POST['prod_ids'];
@@ -36,7 +38,9 @@ trait RS_AJAX
             endif;
         endif;
 
+        // ************************
         // remove all restrictions
+        // ************************
         if (isset($_POST['children'])) :
 
             $cids = explode(',', $_POST['children']);
@@ -51,7 +55,9 @@ trait RS_AJAX
 
         endif;
 
+        // ******************************
         // save custom out of stock text
+        // ******************************
         if (isset($_POST['texts'])) :
 
             $prod_ids = $_POST['prod_ids'];
@@ -65,6 +71,23 @@ trait RS_AJAX
 
             if ($updated) :
                 wp_send_json(__('Custom out of stock text(s) updated', 'woocommerce'));
+            endif;
+
+        endif;
+
+        // ********************************
+        // remove custom out of stock text
+        // ********************************
+        if (isset($_POST['rem_text'])) :
+
+            $prod_ids = explode(',', $_POST['rem_text']);
+
+            foreach ($prod_ids as $pid) :
+                $remmed = delete_post_meta($pid, 'rs_text');
+            endforeach;
+
+            if ($remmed) :
+                wp_send_json(__('Custom out of stock text(s) removed', 'woocommerce'));
             endif;
 
         endif;

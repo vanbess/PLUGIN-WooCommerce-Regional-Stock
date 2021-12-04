@@ -148,6 +148,28 @@ trait RS_JS
                     });
 
                 });
+
+                // ********************************
+                // remove custom out of stock text
+                // ********************************
+                $('button#rs_remove_text').on('click', function(e) {
+                    e.preventDefault();
+
+                    let nonce = $(this).data('nonce'),
+                        children = $(this).data('children');
+
+                    var data = {
+                        '_ajax_nonce': nonce,
+                        'action': 'rs_save_countries',
+                        'rem_text': children
+                    }
+
+                    $.post(ajaxurl, data, function(response) {
+                        alert(response);
+                        location.reload();
+                    });
+
+                });
             });
         </script>
 <?php }
