@@ -110,7 +110,7 @@ class SBWC_RS
                 <p class="rs_form_container">
                     <!-- label -->
                     <label for="rs_countries rs_prod_ids">
-                        <?php _e('Specify all country codes and associated variations for which you would <u><b>like to show a stock status of in stock:</b></u>', 'woocommerce'); ?>
+                        <?php _e('Set all countries out of stock, except for:</b></u>', 'woocommerce'); ?>
                     </label>
                 </p>
 
