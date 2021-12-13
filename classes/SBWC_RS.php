@@ -38,9 +38,6 @@ class SBWC_RS
         add_action('wp_ajax_rs_save_countries', [__CLASS__, 'rs_save_countries']);
         add_action('wp_ajax_nopriv_rs_save_countries', [__CLASS__, 'rs_save_countries']);
 
-        // filter stock status strings based on custom defined RS stock status strings
-        add_filter('woocommerce_get_availability', [__CLASS__, 'rs_display_custom_stock_status'], 1, 2);
-
         // action to set correct class for stock status text and add to cart button
         add_action('woocommerce_before_variations_form', [__CLASS__, 'rs_disable_atc_bn']);
     }
@@ -255,42 +252,6 @@ class SBWC_RS
         wp_enqueue_style('rs-js');
     }
 
-
-    /**
-     * Returns custom RS out of stock string for associated products on the frontend, if set
-     *
-     * @param  array $availability - array of stock availability strings
-     * @param  object $product - WC product object
-     * @return array $availability - array containing custom availability string
-     */
-    public static function rs_display_custom_stock_status($availability, $product)
-    {
-
-        // retrieve product id
-        $prod_id = $product->get_id();
-
-        // retrieve custom stock text
-        $rs_stock_status = get_post_meta($prod_id, 'rs_text', true);
-
-        // retrieve included countries string
-        $instock_countries = explode(',', get_post_meta($prod_id, 'rs_countries', true));
-
-        // retrieve user location
-        $location = WC_Geolocation::geolocate_ip();
-        $country = $location['country'];
-
-        // If a country is not present in $instock_countries array, mark items as out of stock.
-        if (!in_array($country, $instock_countries)) :
-            if ($rs_stock_status) :
-                $availability['availability'] = __($rs_stock_status, 'woocommerce');
-            else :
-                $availability['availability'] = __('Out of stock', 'woocommerce');
-            endif;
-        endif;
-
-        return $availability;
-    }
-
     /**
      * Set stock text class and disable add to cart button as needed
      *
@@ -323,9 +284,10 @@ class SBWC_RS
             if (get_post_meta($cid, 'rs_countries', true)) :
 
                 $instock_countries  = explode(',', get_post_meta($cid, 'rs_countries', true));
+                $custom_message = get_post_meta($cid, 'rs_text', true) ? get_post_meta($cid, 'rs_text', true) : __('Out of stock', 'woocommerce');
 
-                if (in_array($country, $instock_countries)) :
-                    $rs_products[] = $cid;
+                if (!in_array($country, $instock_countries)) :
+                    $rs_products[$cid] = $custom_message;
                 endif;
 
             endif;
@@ -336,27 +298,29 @@ class SBWC_RS
             return;
         endif;
     ?>
-        <input type="hidden" id="rs_in_stock" value="<?php echo implode(',', $rs_products); ?>">
-        <script>
+
+        <?php foreach ($rs_products as $rsid => $text) : ?>
+            <input type="hidden" class="rs_in_stock" data-pid="<?php echo $rsid; ?>" value="<?php echo $text; ?>">
+        <?php endforeach; ?>
+
+        <script id="regional-stock-control">
             jQuery(document).ready(function($) {
 
+                // set custom out of stock message, out of stock class and disable add to cart button on swatch click
                 $('.swatchinput').on('click', function() {
 
                     setTimeout(function() {
 
                         let variation_id = $('.variation_id').val();
-                        let rs_in_stock = $('#rs_in_stock').val();
-                        let position = rs_in_stock.indexOf(variation_id);
 
-                        if (position === -1) {
-                            $('.single_add_to_cart_button').addClass('disabled wc-variation-is-unavailable');
-                            $('.stock').removeClass('in-stock').addClass('out-of-stock');
-                        } else if (position === 0) {
-                            $('.single_add_to_cart_button').removeClass('disabled wc-variation-is-unavailable');
-                            $('.stock').removeClass('out-of-stock').addClass('in-stock');
-                        }
+                        $('.rs_in_stock').each(function(index, element) {
+                            if ($(this).data('pid') == variation_id) {
+                                $('.single_add_to_cart_button').addClass('disabled wc-variation-is-unavailable');
+                                $('.stock').text('').removeClass('in-stock').addClass('out-of-stock').text($(this).val());
+                            }
+                        });
 
-                    }, 100);
+                    }, 50);
 
                 });
 
