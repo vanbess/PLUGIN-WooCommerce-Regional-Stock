@@ -4,7 +4,7 @@ This plugin allows a shop owner/admin to define a country or list of countries f
 
 ## Changing settings
 
-Once the plugin is activated, users can navigate to the Regional Stock Status tab of the product edit screen for variable products. Each variation can have assigned to it a unique list of countries for stock inclusion, along with a unique out of stock message for each variation, which will be shown on the single product page once a particular variation is selected for purchase.
+Once the plugin is activated, users can navigate to the Regional Stock Status tab of the product edit screen for variable products. Each variation can have assigned to it a unique list of countries for stock inclusion, along with a unique out of stock message for each variation, which will be shown on the single product page once a matching variation is selected for purchase from a user who resides in a country which is not whitelisted.
 
 The add to cart button is automatically disabled for these products on variation select to avoid accidental additions to cart.
 
@@ -16,3 +16,4 @@ This plugin has been built specifically for use with the Flatsome theme. Compati
 
 - Support for all product types
 - Wider WordPress theme compatibility
+- Support for provincial/state level exclusions
