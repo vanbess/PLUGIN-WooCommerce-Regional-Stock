@@ -3,7 +3,7 @@
 /**
  * Plugin Name: SBWC Regional Stock
  * Description: Adds the ability to display an out stock message for WooCommerce products based on a set of predefined countries/locations
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: WC Bessinger
  */
 

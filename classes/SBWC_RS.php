@@ -308,7 +308,7 @@ class SBWC_RS
 
                 // set custom out of stock message, out of stock class and disable add to cart button on swatch click
                 $('.swatchinput').on('click', function() {
-
+                    
                     setTimeout(function() {
 
                         let variation_id = $('.variation_id').val();
@@ -316,11 +316,11 @@ class SBWC_RS
                         $('.rs_in_stock').each(function(index, element) {
                             if ($(this).data('pid') == variation_id) {
                                 $('.single_add_to_cart_button').addClass('disabled wc-variation-is-unavailable');
-                                $('.stock').text('').removeClass('in-stock').addClass('out-of-stock').text($(this).val());
+                                $('.stock').removeClass('in-stock').addClass('out-of-stock').text($(this).val());
                             }
                         });
 
-                    }, 50);
+                    }, 20);
 
                 });
 

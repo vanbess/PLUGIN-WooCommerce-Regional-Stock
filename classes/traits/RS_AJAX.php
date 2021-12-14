@@ -46,10 +46,10 @@ trait RS_AJAX
             $cids = explode(',', $_POST['children']);
 
             foreach ($cids as $cid) :
-                $meta_deleted = delete_post_meta($cid, 'rs_countries');
+                $meta_deleted[] = delete_post_meta($cid, 'rs_countries');
             endforeach;
 
-            if ($meta_deleted) :
+            if (!empty($meta_deleted)) :
                 wp_send_json(__('All stock restrictions have been removed', 'woocommerce'));
             endif;
 
@@ -66,10 +66,10 @@ trait RS_AJAX
             $combined = array_combine($prod_ids, $texts);
 
             foreach ($combined as $pid => $text) :
-                $updated = update_post_meta($pid, 'rs_text', $text);
+                $updated[] = update_post_meta($pid, 'rs_text', $text);
             endforeach;
 
-            if ($updated) :
+            if (!empty($updated)) :
                 wp_send_json(__('Custom out of stock text(s) updated', 'woocommerce'));
             endif;
 
@@ -83,10 +83,10 @@ trait RS_AJAX
             $prod_ids = explode(',', $_POST['rem_text']);
 
             foreach ($prod_ids as $pid) :
-                $remmed = delete_post_meta($pid, 'rs_text');
+                $remmed[] = delete_post_meta($pid, 'rs_text');
             endforeach;
 
-            if ($remmed) :
+            if (!empty($remmed)) :
                 wp_send_json(__('Custom out of stock text(s) removed', 'woocommerce'));
             endif;
 
