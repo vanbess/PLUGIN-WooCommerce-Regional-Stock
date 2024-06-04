@@ -1,4 +1,4 @@
-# Regional stock status for WooCommerce
+# PLUGIN: Regional stock status for WooCommerce
 
 This plugin allows a shop owner/admin to define a country or list of countries for which a particular variation is shown as in stock, making said variation unavailable for countries which do not form part of the list.
 
